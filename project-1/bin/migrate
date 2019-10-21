@@ -1,6 +1,6 @@
 #!/bin/bash
 
-command="docker-compose exec db psql -d netflix -U postgres -f"
+command="docker-compose exec db psql -d ferflix -U postgres -f"
 if [[ "$1" == "all" ]]; then
     for f in migrations/*.sql; do
         $command $f

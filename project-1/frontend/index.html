@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <title>FERflix</title>
+    <style>
+        textarea {
+            width: 400px;
+            height: 200px;
+        }
+        input {
+            width: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>FERflix</h1>
+
+    <hr>
+
+    <h2>Add Movie</h2>
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    <label>Title</label>
+                </td>
+                <td>
+                    <input id="add-title" type="text" value="The big sick"><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Categories</label>
+                </td>
+                <td>
+                    <input id="add-categories" type="text" value="Family; Comedy">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Summary</label>
+                </td>
+                <td>
+                    <textarea id="add-summary">Pakistan-born comedian Kumail Nanjiani and grad student Emily Gardner fall in love but struggle as their cultures clash. When Emily contracts a mysterious illness, Kumail finds himself forced to face her feisty parents, his family's expectations, and his true feelings.</textarea><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Description</label>
+                </td>
+                <td>
+                    <textarea id="add-description">Kumail (Kumail Nanjiani), in the middle of becoming a budding stand-up comedian, meets Emily (Zoe Kazan). Meanwhile, a sudden illness sets in forcing Emily to be put into a medically-induced coma. Kumail must navigate being a comedian, dealing with tragic illness, and placating his family's desire to let them fix him up with a spouse, while contemplating and figuring out who he really is and what he truly believes.</textarea><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <button id="add" style="float: right;">Add Movie</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("#add").on("click", function() {
+            $.ajax({
+                url: "http://localhost:3000/movie",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    title: $("#add-title").val(),
+                    categories: $("#add-categories").val(),
+                    summary: $("#add-summary").val(),
+                    description: $("#add-description").val()
+                }),
+                success: function (data, textStatus, jqXHR) {
+                    alert("OK!");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(`${jqXHR.statusText} (${jqXHR.status})`);
+                }
+            });
+        });
+    });
+    </script>
+</body>
+
+</html>
