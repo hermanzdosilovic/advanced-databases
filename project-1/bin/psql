@@ -1,2 +1,2 @@
 #!/bin/bash
-docker-compose exec db psql -d netflix -U postgres
+docker-compose exec db psql -d netflix -U postgres "$@"
