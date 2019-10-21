@@ -1,0 +1,4 @@
+Ispisati prezime zaposlenika i ukupan broj iznajmljivanih primjeraka filmova iz sljedećih kategorija: 'Comedy', 'Horror', 'Sports'. U obzir uzeti samo filmove koji bilo u nazivu bilo u opisu sadrže riječ čiji je normalizirani oblik jednak 'empir' ili 'shark'. Uzmite u obzir i primjerke filmova koji još nisu vraćeni.
+
+NAPOMENA: Za atribut staff.last_name u pivot tablici zadržite originalni tip podatka.
+Donja tablica ilustrira izgled rezultata.
