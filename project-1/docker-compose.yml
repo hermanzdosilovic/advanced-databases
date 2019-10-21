@@ -1,0 +1,11 @@
+version: '2'
+services:
+  db:
+    image: postgres:11
+    environment:
+      - POSTGRES_DB=netflix
+    volumes:
+      - ./migrations:/migrations
+    ports:
+      - "5432:5432"
+    restart: always
