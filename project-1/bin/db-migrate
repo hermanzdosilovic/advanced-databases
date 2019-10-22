@@ -3,6 +3,7 @@
 command="docker-compose exec db psql -d ferflix -U postgres -f"
 if [[ "$1" == "all" ]]; then
     for f in migrations/*.sql; do
+        echo $f
         $command $f
     done
 else

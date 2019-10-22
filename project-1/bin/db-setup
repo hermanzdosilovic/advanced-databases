@@ -1,0 +1,3 @@
+#!/bin/bash
+./bin/psql -c "DROP TABLE movie; DROP FUNCTION movie_search"
+./bin/db-migrate all

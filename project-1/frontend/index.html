@@ -16,6 +16,14 @@
             width: 400px;
         }
 
+        td {
+            padding: 5px;
+        }
+
+        .no-border {
+            border: none;
+        }
+
         .column {
             float: left;
             width: 50%;
@@ -41,7 +49,7 @@
                 <tbody>
                     <tr>
                         <td>
-                            <label>Title</label>
+                            <label><strong>Title</strong></label>
                         </td>
                         <td>
                             <input id="add-title" type="text" value="Forrest Gump"><br>
@@ -49,7 +57,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label>Categories</label>
+                            <label><strong>Categories</strong></label>
                         </td>
                         <td>
                             <input id="add-categories" type="text" value="Drama; Romance">
@@ -57,7 +65,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label>Summary</label>
+                            <label><strong>Summary</strong></label>
                         </td>
                         <td>
                             <textarea
@@ -66,7 +74,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label>Description</label>
+                            <label><strong>Description</strong></label>
                         </td>
                         <td>
                             <textarea
@@ -87,13 +95,15 @@
 
         <div class="column">
             <h2>Search Movies</h2>
-            <input id="search" type="text">
+            <input id="search" type="text" list="suggestions">
+            <datalist id="suggestions">
+            </datalist>
 
             <div id="result">
             </div>
         </div>
     </div>
-    
+
     <script type="text/javascript">
         $(document).ready(function () {
             $("#add").on("click", function () {
@@ -133,7 +143,7 @@
                         var preview = `<h4>${data.length} movies found.</h4>`
                         for (var i = 0; i < data.length; ++i) {
                             preview += `
-                        <table style="background: #eee; padding: 10px; border: 1px solid #ddd;">
+                        <table>
                             <tbody>
                                 <tr><td><strong>ID</strong></td><td>${data[i]["movieid"]}</td></tr>
                                 <tr><td><strong>Title</strong></td><td>${data[i]["title"]}</td></tr>
