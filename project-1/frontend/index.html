@@ -2,7 +2,8 @@
 <html>
 
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
     <title>FERflix</title>
     <style>
@@ -10,8 +11,20 @@
             width: 400px;
             height: 200px;
         }
+
         input {
             width: 400px;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
         }
     </style>
 </head>
@@ -21,99 +34,105 @@
 
     <hr>
 
-    <h2>Add Movie</h2>
-    <table>
-        <tbody>
-            <tr>
-                <td>
-                    <label>Title</label>
-                </td>
-                <td>
-                    <input id="add-title" type="text" value="Forrest Gump"><br>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label>Categories</label>
-                </td>
-                <td>
-                    <input id="add-categories" type="text" value="Drama; Romance">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label>Summary</label>
-                </td>
-                <td>
-                    <textarea id="add-summary">The presidencies of Kennedy and Johnson, the events of Vietnam, Watergate, and other history unfold through the perspective of an Alabama man with an IQ of 75.</textarea><br>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label>Description</label>
-                </td>
-                <td>
-                    <textarea id="add-description">Forrest Gump is a simple man with a low I.Q. but good intentions. He is running through childhood with his best and only friend Jenny. His 'mama' teaches him the ways of life and leaves him to choose his destiny. Forrest joins the army for service in Vietnam, finding new friends called Dan and Bubba, he wins medals, creates a famous shrimp fishing fleet, inspires people to jog, starts a ping-pong craze, creates the smiley, writes bumper stickers and songs, donates to people and meets the president several times. However, this is all irrelevant to Forrest who can only think of his childhood sweetheart Jenny Curran, who has messed up her life. Although in the end all he wants to prove is that anyone can love anyone.</textarea><br>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                </td>
-                <td>
-                    <button id="add" style="float: right;">Add Movie</button>
-                </td>
-            </tr>
-        </tbody>
+    <div class="row">
+        <div class="column">
+            <h2>Add Movie</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>Title</label>
+                        </td>
+                        <td>
+                            <input id="add-title" type="text" value="Forrest Gump"><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Categories</label>
+                        </td>
+                        <td>
+                            <input id="add-categories" type="text" value="Drama; Romance">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Summary</label>
+                        </td>
+                        <td>
+                            <textarea
+                                id="add-summary">The presidencies of Kennedy and Johnson, the events of Vietnam, Watergate, and other history unfold through the perspective of an Alabama man with an IQ of 75.</textarea><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Description</label>
+                        </td>
+                        <td>
+                            <textarea
+                                id="add-description">Forrest Gump is a simple man with a low I.Q. but good intentions. He is running through childhood with his best and only friend Jenny. His 'mama' teaches him the ways of life and leaves him to choose his destiny. Forrest joins the army for service in Vietnam, finding new friends called Dan and Bubba, he wins medals, creates a famous shrimp fishing fleet, inspires people to jog, starts a ping-pong craze, creates the smiley, writes bumper stickers and songs, donates to people and meets the president several times. However, this is all irrelevant to Forrest who can only think of his childhood sweetheart Jenny Curran, who has messed up her life. Although in the end all he wants to prove is that anyone can love anyone.</textarea><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <button id="add" style="float: right;">Add Movie</button>
+                        </td>
+                    </tr>
+                </tbody>
 
-    </table>
+            </table>
+        </div>
 
-    <hr>
+        <div class="column">
+            <h2>Search Movies</h2>
+            <input id="search" type="text">
 
-    <h2>Search Movies</h2>
-    <input id="search" type="text">
-
-    <div id="result">
+            <div id="result">
+            </div>
+        </div>
     </div>
-
+    
     <script type="text/javascript">
-    $(document).ready(function() {
-        $("#add").on("click", function() {
-            $.ajax({
-                url: "http://localhost:3000/movie",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    title: $("#add-title").val(),
-                    categories: $("#add-categories").val(),
-                    summary: $("#add-summary").val(),
-                    description: $("#add-description").val()
-                }),
-                success: function (data, textStatus, jqXHR) {
-                    alert("Movie successfully added!");
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert(`${jqXHR.statusText} (${jqXHR.status})`);
-                }
+        $(document).ready(function () {
+            $("#add").on("click", function () {
+                $.ajax({
+                    url: "http://localhost:3000/movie",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        title: $("#add-title").val(),
+                        categories: $("#add-categories").val(),
+                        summary: $("#add-summary").val(),
+                        description: $("#add-description").val()
+                    }),
+                    success: function (data, textStatus, jqXHR) {
+                        alert("Movie successfully added!");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(`${jqXHR.statusText} (${jqXHR.status})`);
+                    }
+                });
             });
-        });
 
-        var searchInProgress = false;
-        $("#search").on("keyup", function() {
-            if (searchInProgress || $("#search").val().length == 0) {
-                return;
-            }
-            searchInProgress = true;
-            $.ajax({
-                url: "http://localhost:3000/rpc/movie_search",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    pattern: $("#search").val()
-                }),
-                success: function (data, textStatus, jqXHR) {
-                    var preview = `<h4>${data.length} movies found.</h4>`
-                    for (var i = 0; i < data.length; ++i) {
-                        preview += `
+            var searchInProgress = false;
+            $("#search").on("keyup", function () {
+                if (searchInProgress || $("#search").val().length == 0) {
+                    return;
+                }
+                searchInProgress = true;
+                $.ajax({
+                    url: "http://localhost:3000/rpc/movie_search",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        pattern: $("#search").val()
+                    }),
+                    success: function (data, textStatus, jqXHR) {
+                        var preview = `<h4>${data.length} movies found.</h4>`
+                        for (var i = 0; i < data.length; ++i) {
+                            preview += `
                         <table style="background: #eee; padding: 10px; border: 1px solid #ddd;">
                             <tbody>
                                 <tr><td><strong>ID</strong></td><td>${data[i]["movieid"]}</td></tr>
@@ -124,18 +143,18 @@
                             <tbody>
                         </table>
                         </br>
-                        `;    
+                        `;
+                        }
+                        $("#result").html(preview);
+                        searchInProgress = false;
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(`${jqXHR.statusText} (${jqXHR.status})`);
+                        searchInProgress = false;
                     }
-                    $("#result").html(preview);
-                    searchInProgress = false;
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert(`${jqXHR.statusText} (${jqXHR.status})`);
-                    searchInProgress = false;
-                }
-            })
+                })
+            });
         });
-    });
     </script>
 </body>
 
