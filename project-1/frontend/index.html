@@ -96,8 +96,8 @@
         <div class="column">
             <h2>Search Movies</h2>
             <input id="search" type="text" list="suggestions">
-            <input name="conj" type="radio" value="AND" checked>AND
-            <input name="conj" type="radio" value="OR">OR
+            <input name="conj" type="radio" value="AND">AND
+            <input name="conj" type="radio" value="OR" checked>OR
             <datalist id="suggestions">
             </datalist>
 
@@ -149,7 +149,7 @@
                     success: function (data, textStatus, jqXHR) {
                         var resultPreview = `<h4>${data.length} movies found.</h4>`;
                         resultPreview += `<p>Query Interpretation: <code style="background: #eee; padding: 2px;">${trueQuery}</code></p>`;
-                        var suggestions = "";
+                        var suggestions = [];
                         for (var i = 0; i < data.length; ++i) {
                             resultPreview += `
                         <table style="border: 1px solid #eee; width: 100%;">
@@ -164,10 +164,24 @@
                         </table>
                         </br>
                         `;
-                            suggestions += `<option value="${data[i]["title"].replace(/<.?b>/g, "")}"></option>`;
+                            if (suggestions.length < 15) {
+                                var attrs = ["title", "categories", "summary"];
+                                for (var j = 0; j < attrs.length; j++) {
+                                    var x = data[i][attrs[j]].replace(/<.?b>/g, "");
+                                    if (!suggestions.includes(x) && suggestions.length < 15) {
+                                        suggestions = suggestions.concat([x]);
+                                    }
+                                }
+                            }
                         }
+
+                        var suggestionsHtml = "";
+                        for (var i = 0; i < suggestions.length; ++i) {
+                            suggestionsHtml += `<option value="${suggestions[i]}"></option>`;
+                        }
+
                         $("#result").html(resultPreview);
-                        $("#suggestions").html(suggestions);
+                        $("#suggestions").html(suggestionsHtml);
                         searchInProgress = false;
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
