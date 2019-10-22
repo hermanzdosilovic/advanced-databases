@@ -128,7 +128,7 @@
 
             var searchInProgress = false;
             $("#search").on("keyup", function () {
-                if (searchInProgress || $("#search").val().length == 0) {
+                if (searchInProgress) {
                     return;
                 }
                 searchInProgress = true;
@@ -140,10 +140,11 @@
                         pattern: $("#search").val()
                     }),
                     success: function (data, textStatus, jqXHR) {
-                        var preview = `<h4>${data.length} movies found.</h4>`
+                        var resultPreview = `<h4>${data.length} movies found.</h4>`
+                        var suggestions = "";
                         for (var i = 0; i < data.length; ++i) {
-                            preview += `
-                        <table>
+                            resultPreview += `
+                        <table style="border: 1px solid #eee; width: 100%;">
                             <tbody>
                                 <tr><td><strong>ID</strong></td><td>${data[i]["movieid"]}</td></tr>
                                 <tr><td><strong>Title</strong></td><td>${data[i]["title"]}</td></tr>
@@ -154,8 +155,10 @@
                         </table>
                         </br>
                         `;
+                            suggestions += `<option value="${data[i]["title"].replace(/<.?b>/g, "")}"></option>`;
                         }
-                        $("#result").html(preview);
+                        $("#result").html(resultPreview);
+                        $("#suggestions").html(suggestions);
                         searchInProgress = false;
                     },
                     error: function (jqXHR, textStatus, errorThrown) {

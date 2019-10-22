@@ -9,11 +9,11 @@ RETURNS TABLE(
 AS 
 $$
     SELECT movieID,
-           title,
-		   categories,
-		   summary,
-           description
+           ts_headline(title, websearch_to_tsquery('english', $1)),
+		   ts_headline(categories, websearch_to_tsquery('english', $1)),
+		   ts_headline(summary, websearch_to_tsquery('english', $1)),
+           ts_headline(description, websearch_to_tsquery('english', $1))
     FROM movie
-	WHERE alltsv @@ plainto_tsquery('english', $1)
+	WHERE alltsv @@ websearch_to_tsquery('english', $1)
 $$ 
 LANGUAGE 'sql';
