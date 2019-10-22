@@ -129,22 +129,26 @@
             });
 
             var searchInProgress = false;
-            $("#search").on("keyup", function () {
+            var searchFunction = function () {
                 if (searchInProgress) {
                     return;
                 }
                 searchInProgress = true;
                 var conj = $('input[name="conj"]');
                 var isAnd = conj[0].checked;
+
+                var query = $("#search").val().trim();
+                var trueQuery = ([...query.match(/(".+?")/g) || []]).concat(query.replace(/(".+?")/g, "").trim().split(" ").filter(function(x) { return x != ""; })).join(` ${isAnd ? "&" : "OR"} `);
                 $.ajax({
                     url: "http://localhost:3000/rpc/movie_search",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify({
-                        pattern: $("#search").val()
+                        pattern: trueQuery
                     }),
                     success: function (data, textStatus, jqXHR) {
-                        var resultPreview = `<h4>${data.length} movies found.</h4>`
+                        var resultPreview = `<h4>${data.length} movies found.</h4>`;
+                        resultPreview += `<p>Query Interpretation: <code style="background: #eee; padding: 2px;">${trueQuery}</code></p>`;
                         var suggestions = "";
                         for (var i = 0; i < data.length; ++i) {
                             resultPreview += `
@@ -171,7 +175,9 @@
                         searchInProgress = false;
                     }
                 })
-            });
+            };
+            $("#search").on("keyup", searchFunction);
+            $('input[name="conj"').on("change", searchFunction);
         });
     </script>
 </body>
