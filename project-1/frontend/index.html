@@ -104,9 +104,12 @@
             }
             searchInProgress = true;
             $.ajax({
-                url: "http://localhost:3000/rpc/movie_search?pattern=" + $("#search").val(),
-                type: "GET",
+                url: "http://localhost:3000/rpc/movie_search",
+                type: "POST",
                 contentType: "application/json",
+                data: JSON.stringify({
+                    pattern: $("#search").val()
+                }),
                 success: function (data, textStatus, jqXHR) {
                     var preview = `<h4>${data.length} movies found.</h4>`
                     for (var i = 0; i < data.length; ++i) {
@@ -127,8 +130,8 @@
                     searchInProgress = false;
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    searchInProgress = false;
                     alert(`${jqXHR.statusText} (${jqXHR.status})`);
+                    searchInProgress = false;
                 }
             })
         });

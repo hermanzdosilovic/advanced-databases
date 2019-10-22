@@ -14,9 +14,6 @@ $$
 		   summary,
            description
     FROM movie
-    WHERE titletsv @@ to_tsquery('english', $1) OR 
-		  categoriestsv @@ to_tsquery('english', $1) OR
-		  summary @@ to_tsquery('english', $1) OR
-	      descriptiontsv @@ to_tsquery('english', $1)
+	WHERE alltsv @@ plainto_tsquery('english', $1)
 $$ 
 LANGUAGE 'sql';
