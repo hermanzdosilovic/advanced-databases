@@ -1,4 +1,4 @@
-CREATE FUNCTION movie_search(pattern VARCHAR) 
+CREATE OR REPLACE FUNCTION movie_search(pattern VARCHAR) 
 RETURNS TABLE(
 	movieid INTEGER, 
 	title TEXT,
@@ -9,6 +9,8 @@ RETURNS TABLE(
 ) 
 AS 
 $$
+	INSERT INTO search_history (query) VALUES ($1);
+
     SELECT movieID,
            ts_headline(title, websearch_to_tsquery('english', $1)),
 		   ts_headline(categories, websearch_to_tsquery('english', $1)),

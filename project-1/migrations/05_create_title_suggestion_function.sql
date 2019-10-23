@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 CREATE OR REPLACE FUNCTION title_suggestion(pattern VARCHAR) 
 RETURNS TABLE(
 	title TEXT,
