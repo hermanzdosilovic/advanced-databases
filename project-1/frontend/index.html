@@ -111,8 +111,8 @@
             <tbody>
                 <tr>
                     <td>
-                        <input id="from" type="datetime-local"> - 
-                        <input id="to" type="datetime-local">
+                        <input id="from" type="datetime-local" value="2019-10-23T00:00"> -
+                        <input id="to" type="datetime-local" value="2019-10-26T00:00">
                         <input name="gran" type="radio" value="HOUR">HOUR
                         <input name="gran" type="radio" value="DAY" checked> DAY<br>
                     </td>
@@ -122,10 +122,72 @@
                 </tr>
             </tbody>
         </table>
+        <pre id="analyse-query">
+        </pre>
     </div>
 
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#analyse").on("click", function() {
+                function parseISOLocal(s) {
+                    var b = s.split(/\D/);
+                    return new Date(b[0], b[1]-1, b[2], b[3], b[4]);
+                }
+
+                var from = $("#from").val();
+                var to = $("#to").val();
+
+                var fd = parseISOLocal(from);
+                var td = parseISOLocal(to);
+
+                var isHour = $('input[name="gran"]')[0].checked;
+
+                var times = [];
+                while(fd <= td)
+                {
+                    times = times.concat([new Date(fd)]);
+                    if (isHour) {
+                        fd.setHours(fd.getHours() + 1);
+                    } else {
+                        fd.setDate(fd.getDate() + 1);
+                    }
+                }
+
+                var timess = []
+                var pivotTable = []
+                for (var i = 0; i < times.length; ++i) {
+                    timess = timess.concat([isHour ? times[i].getHours() : times[i].getDate()]);
+                    pivotTable = pivotTable.concat([`s${i} INTEGER`])
+                }
+
+                timess = timess.join(", ");
+                pivotTable = pivotTable.join(", ");
+
+                var query =
+                `
+                SELECT
+                    *
+                FROM
+                    crosstab
+                    (
+                        $$
+                        SELECT
+                            query,
+                            EXTRACT(${isHour ? "HOUR" : "DAY"} FROM created_at)::INTEGER AS time,
+                            COUNT(*)::INTEGER AS count
+                        FROM search_history
+                        WHERE created_at >= '${from}' AND created_at <= '${to}'
+                        GROUP BY query, time
+                        ORDER BY query, count;
+                        $$,
+                        $$SELECT * FROM UNNEST(ARRAY[${timess}])$$
+                    )
+                    AS
+                    pivotTable(query TEXT, ${pivotTable})
+                ORDER BY query;
+                `;
+                $("#analyse-query").html(query);
+            });
             $("#add").on("click", function () {
                 $.ajax({
                     url: "http://localhost:3000/movie",
