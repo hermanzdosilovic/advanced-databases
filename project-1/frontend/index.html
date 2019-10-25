@@ -105,6 +105,24 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <h2>Analyse Queries</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <input id="from" type="datetime-local"> - 
+                        <input id="to" type="datetime-local">
+                        <input name="gran" type="radio" value="HOUR">HOUR
+                        <input name="gran" type="radio" value="DAY" checked> DAY<br>
+                    </td>
+                    <td>
+                        <button id="analyse" style="float: right;">Analyse</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <script type="text/javascript">
         $(document).ready(function () {
