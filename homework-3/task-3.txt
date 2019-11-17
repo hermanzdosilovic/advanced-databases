@@ -1,0 +1,2 @@
+Za svaki hotel (pois.fclass, "hotel") koji ima definirano ime pronađite tri najbliža planinska vrha (nature.fclass, "peak"). Ime vrhunca može biti nepoznato.
+Ispišite gid i naziv hotela, gid i naziv vrhunca, te udaljenost od hotela do vrhunca (zaokruženo na cijeli broj) i redni broj. Rezultate poredajte po nazivu hotela i rednom broju vrhunca.

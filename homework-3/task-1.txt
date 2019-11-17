@@ -1,0 +1,2 @@
+Ispišite gid pruga koje prolaze kroz šumu i duljinu dijela pruge koji prolazi kroz šumu.
+Duljinu zaokružite na cijeli broj.
