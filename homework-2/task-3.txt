@@ -1,0 +1,2 @@
+Ispisati identifikator, prezime i ime zaposlenika te broj posudbi filmova koje se "pripisuju" tom zaposleniku. Zaposleniku se "pripisuju" sve posudbe koje je odradio on sam ili njemu podređeni zaposlenici (direktno i indirektno podređeni).
+Donja tablica ilustrira izgled rezultata.

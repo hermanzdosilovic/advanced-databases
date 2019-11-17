@@ -1,0 +1,2 @@
+Ispisati naziv države i broj (različitih) klijenata iz te države s adresom (address.adress) koja u nazivu sadrži riječ nalik riječi 'avenija'. Smatrati da riječ nalikuje riječi 'avenija' ako je potrebno obaviti najviše tri promjene da bi dvije rječi postale jednake. Koristite implementaciju algoritma za udaljenost uređivanja u PostgreSQL-u.
+Ispišite podatke samo za države s barem 2 takva klijenta.
