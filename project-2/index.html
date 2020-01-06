@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <title>CNN</title>
+</head>
+
+<body>
+    <div id="articles">
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.ajax({
+                url: "http://localhost:5000/articles",
+                type: "GET",
+                success: function (data, textStatus, jqXHR) {
+                    articles = "";
+                    for(var i = 0; i < data.length; ++i) {
+                        article = data[i];
+                        articles += `
+                            <div id="${article["_id"]}">
+                                <h2>${article["title"]}</h2>
+                                <img src="${article["image"]}"/>
+                                <p>${article["text"]}</p>
+                            </div>
+                            </br>
+                            </br>
+                        `;
+                    }
+                    $("#articles").html(articles);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(`${jqXHR.statusText} (${jqXHR.status})`);
+                }
+            });
+        });
+    </script>
+</body>
