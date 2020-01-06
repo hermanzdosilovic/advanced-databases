@@ -40,6 +40,37 @@ def articles():
         articles.append(article)
     return jsonify(articles)
 
+@app.route('/map_reduce_1')
+def mapreduce1():
+    map = "function(){ emit( this.comments.length, 1 ); }"
+    reduce = "function(key, value){ return Array.sum(value); }"
+    out = "mapreduce1"
+
+    db.articles.map_reduce(map, reduce, out)
+
+    results = []
+    for result in db.mapreduce1.find():
+        results.append(result)
+
+    return jsonify(results)
+
+
+@app.route('/map_reduce_2')
+def mapreduce2():
+    map = "function(){ emit( this.comments.length > 0 ? 1 : 0, 1 ); }"
+    reduce = "function(key, value){ return Array.sum(value); }"
+    finalize = f"function(key, reducedVal){{ return reducedVal/{db.articles.count_documents({})}; }}"
+    out = "mapreduce2"
+
+    db.articles.map_reduce(map, reduce, out, finalize=finalize)
+
+    results = []
+    for result in db.mapreduce2.find():
+        results.append(result)
+
+    return jsonify(results)
+
+
 if __name__ == '__main__':
     global db
 
@@ -50,6 +81,7 @@ if __name__ == '__main__':
     fake.add_provider(internet)
     fake.add_provider(lorem)
 
+    #NUM = 5
     NUM = 10000
     if db.articles.count_documents({}) < NUM:
         for _ in range(NUM):
@@ -58,8 +90,9 @@ if __name__ == '__main__':
                 "text": fake.paragraph(nb_sentences=random.randint(50, 100)),
                 "author": fake.name(),
                 "image": fake.image_url(width=200, height=100),
-                "comments": [fake.paragraph() for _ in range(random.randint(0, 20))]
+                "comments": [fake.paragraph() for _ in range(random.randint(0, 5))]
             }
+            #"comments": [fake.paragraph() for _ in range(random.randint(0, 20))]
             db.articles.insert_one(article)
 
     app.run()
