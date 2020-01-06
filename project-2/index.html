@@ -5,12 +5,66 @@
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
     <title>CNN</title>
+    <style>
+        textarea {
+            width: 600px;
+            height: 100px;
+        }
+        .comment {
+            max-width: 600px;
+        }
+    </style>
 </head>
 
 <body>
     <div id="articles">
     </div>
     <script type="text/javascript">
+        function addComment(e) {
+            id = e.closest("div").id;
+            text = $(e.parentElement).find("textarea").val();
+            $.ajax({
+                url: `http://localhost:5000/articles/${id}/comments`,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    comment: text
+                }),
+                success: function (data, textStatus, jqXHR) {
+                    $(`#${id}`)[0].outerHTML = htmlForArticle(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(`${jqXHR.statusText} (${jqXHR.status})`);
+                }
+            });
+        }
+
+        function htmlForArticle(article) {
+            comments = "";
+            for(var j = 0; j < article.comments.length; ++j) {
+                comments += `
+                    <div class="comment" style="border: 1px #ddd solid; padding: 10px; margin-bottom: 5px;">
+                    ${article.comments[j]}
+                    </div>
+                `;
+            }
+            return `
+                <div id="${article["_id"]}">
+                    <h1>${article["title"]}</h1>
+                    <img src="${article["image"]}"/>
+                    <p>${article["text"]}</p>
+                    <h3>Comments</h3>
+                    ${comments}
+                    <textarea width=500></textarea></br>
+                    <button onclick="addComment(this)">Comment</button>
+                    </br>
+                    <hr>
+                    </br>
+                    </br>
+                </div>
+            `;
+        }
+
         $(document).ready(function() {
             $.ajax({
                 url: "http://localhost:5000/articles",
@@ -18,16 +72,7 @@
                 success: function (data, textStatus, jqXHR) {
                     articles = "";
                     for(var i = 0; i < data.length; ++i) {
-                        article = data[i];
-                        articles += `
-                            <div id="${article["_id"]}">
-                                <h2>${article["title"]}</h2>
-                                <img src="${article["image"]}"/>
-                                <p>${article["text"]}</p>
-                            </div>
-                            </br>
-                            </br>
-                        `;
+                        articles += htmlForArticle(data[i]);
                     }
                     $("#articles").html(articles);
                 },
