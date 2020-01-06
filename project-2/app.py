@@ -34,13 +34,16 @@ if __name__ == '__main__':
     fake = Faker()
     fake.add_provider(internet)
     fake.add_provider(lorem)
-    for _ in range(10):
-        article = {
-            "title": fake.sentence(nb_words=random.randint(5, 10)),
-            "text": fake.paragraph(nb_sentences=random.randint(50, 100)),
-            "author": fake.name(),
-            "image": fake.image_url(width=200, height=100)
-        }
-        db.articles.insert(article)
+
+    NUM = 10000
+    if db.articles.count_documents({}) < NUM:
+        for _ in range(NUM):
+            article = {
+                "title": fake.sentence(nb_words=random.randint(5, 10)),
+                "text": fake.paragraph(nb_sentences=random.randint(50, 100)),
+                "author": fake.name(),
+                "image": fake.image_url(width=200, height=100)
+            }
+            db.articles.insert_one(article)
 
     app.run()
