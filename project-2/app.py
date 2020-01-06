@@ -71,6 +71,73 @@ def mapreduce2():
     return jsonify(results)
 
 
+@app.route('/map_reduce_3')
+def mapreduce3():
+    map = """
+function() {
+    var text = this.text.replace(/[\.,\!\?;:()]/g, '').replace(/ +/g, ' ');
+    var words = text.split(" ");
+    var frequencies = {};
+    for(var i = 0; i < words.length; ++i) {
+        if (frequencies[words[i]] === undefined) {
+            frequencies[words[i]] = 0
+        }
+        frequencies[words[i]] += 1;
+    }
+    emit(this.author, frequencies);
+}
+    """
+
+    reduce = """
+function(key, value) {
+    var frequencies = {};
+    for(var i = 0; i < value.length; ++i) {
+        Object.keys(value[i]).forEach(function(key) {
+            if (frequencies[key] === undefined) {
+                frequencies[key] = 0;
+            }
+            frequencies[key] += value[i][key];
+        });
+    }
+    return frequencies;
+}
+    """
+
+    finalize = """
+function(key, value) {
+    var all_frequencies = [];
+    Object.keys(value).forEach(function(key) {
+        all_frequencies = all_frequencies.concat(value[key]);
+    });
+    all_frequencies.sort().reverse();
+    var top_words = [];
+    for(var i = 0; i < Math.min(10, all_frequencies.length); ++i) {
+        var should_return = false;
+        Object.keys(value).forEach(function(key) {
+            if (should_return) {
+                return;
+            }
+            if (value[key] == all_frequencies[i] && !top_words.includes(key)) {
+                top_words = top_words.concat(key);
+                should_return = true;
+            }
+        });
+    }
+    return top_words;
+}
+    """
+
+    out = "mapreduce3"
+
+    db.articles.map_reduce(map, reduce, out, finalize=finalize)
+
+    results = []
+    for result in db.mapreduce3.find():
+        results.append(result)
+
+    return jsonify(results)
+
+
 if __name__ == '__main__':
     global db
 
@@ -81,18 +148,16 @@ if __name__ == '__main__':
     fake.add_provider(internet)
     fake.add_provider(lorem)
 
-    #NUM = 5
     NUM = 10000
     if db.articles.count_documents({}) < NUM:
         for _ in range(NUM):
             article = {
                 "title": fake.sentence(nb_words=random.randint(5, 10)),
-                "text": fake.paragraph(nb_sentences=random.randint(50, 100)),
+                "text": fake.paragraph(nb_sentences=random.randint(100, 200)),
                 "author": fake.name(),
                 "image": fake.image_url(width=200, height=100),
-                "comments": [fake.paragraph() for _ in range(random.randint(0, 5))]
+                "comments": [fake.paragraph() for _ in range(random.randint(0, 20))]
             }
-            #"comments": [fake.paragraph() for _ in range(random.randint(0, 20))]
             db.articles.insert_one(article)
 
     app.run()
